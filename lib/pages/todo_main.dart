@@ -50,11 +50,15 @@ class _TodoMainState extends State<TodoMain> {
                 setState(() {
                   isLoading = true;
                 });
+                getListOfTodos();
                 DB.instance.insertTodo(const TodoModel(
                     title: 'Привет',
-                    desc: 'Тестовое описание',
+                    desc: 'Lorem ipsum dolor sit amet,'
+                        'consectetur adipiscing elit.'
+                        'Suspendisse gravida lobortis'
+                        ' lacus, ut finibus lectus luctus non. '
+                        'Quisque sed odio.',
                     subtitle: '<Тестовый подзаголовок>'));
-                getListOfTodos();
                 setState(() {
                   isLoading = false;
                 });
@@ -72,31 +76,44 @@ class _TodoMainState extends State<TodoMain> {
   }
 
   Widget buildList() {
-    return ListView.builder(
-        itemCount: listOfTodos.length,
-        itemBuilder: (context, index) {
-          final todo = listOfTodos[index];
-          return Dismissible(
-            onDismissed: (direction) async{
-              await DB.instance.deleteTodo(listOfTodos[index].id!);
-              getListOfTodos();
-            },
-            key: ValueKey(todo),
-            child: InkWell(
-              child: ListTile(
-                title: Column(
-                  children: [
-                    Text(todo.title),
-                    Text(todo.subtitle == null
-                        ? '<Без описания>'
-                        : todo.subtitle!),
-                    Text(todo.desc),
-                  ],
+    return RefreshIndicator(
+
+      onRefresh: () async{
+        setState(() {
+          isLoading = true;
+        });
+        getListOfTodos();
+        setState(() {
+          isLoading = false;
+        });
+        },
+      child: ListView.builder(
+          itemCount: listOfTodos.length,
+          itemBuilder: (context, index) {
+            final todo = listOfTodos[index];
+            return Dismissible(
+              onDismissed: (direction) async{
+                await DB.instance.deleteTodo(listOfTodos[index].id!);
+                getListOfTodos();
+              },
+              key: ValueKey(todo),
+              child: InkWell(
+                child: ListTile(
+                  title: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(todo.title,style: const TextStyle(fontSize: 22,fontWeight: FontWeight.bold)),
+                      Text(todo.subtitle == null
+                          ? '<Без описания>'
+                          : todo.subtitle!,style: const TextStyle(color: Colors.grey)),
+                      Text(todo.desc),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          );
-        });
+            );
+          }),
+    );
   }
 
   Future<Object?> addTodo() {
