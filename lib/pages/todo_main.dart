@@ -66,7 +66,7 @@ class _TodoMainState extends State<TodoMain> {
           child: isLoading == true
               ? const CircularProgressIndicator()
               : listOfTodos.isEmpty
-                  ? const Text('Пусто')
+                  ? const Text('Пусто', style: TextStyle(fontSize: 24),)
                   : buildList()),
     );
   }
