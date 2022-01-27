@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqlite_1/model/todo_model.dart';
+import 'package:sqlite_1/pages/add_edit_todo.dart';
 import '../db.dart';
 
 class TodoMain extends StatefulWidget {
   const TodoMain({Key? key}) : super(key: key);
-
+  static const routeName = '/TodoMain';
   @override
   _TodoMainState createState() => _TodoMainState();
 }
 
 class _TodoMainState extends State<TodoMain> {
+
   late List<TodoModel> listOfTodos;
   bool isLoading = false;
   final TextEditingController titleController = TextEditingController();
@@ -46,8 +48,9 @@ class _TodoMainState extends State<TodoMain> {
         title: const Text('Hiffer'),
         actions: [
           IconButton(
-              onPressed: () async {
-                setState(() {
+              onPressed: (){
+                Navigator.pushNamed(context, TodoAddEdit.routeName);
+                /*setState(() {
                   isLoading = true;
                 });
                 getListOfTodos();
@@ -61,7 +64,7 @@ class _TodoMainState extends State<TodoMain> {
                     subtitle: '<Тестовый подзаголовок>'));
                 setState(() {
                   isLoading = false;
-                });
+                });*/
               },
               icon: const Icon(Icons.add))
         ],
